@@ -1,0 +1,7 @@
+[ 
+    {"text":"red roses", "code":1, "img":"https://i.postimg.cc/nVdmbvbH/red-roses.jpg", "price":50}, 
+    {"text":"white roses", "code":2, "img":"https://i.postimg.cc/MKCvq5s8/white-roses.jpg", "price":55}, 
+    {"text":"white chrysanthemums", "code":3, "img":"https://i.postimg.cc/Tw3PC4Pn/white-chrysanthemums.jpg", "price":40},
+    {"text":"yellow chrysanthemums", "code":4, "img":"https://i.postimg.cc/MKQpPRz3/yellow-chrysanthemums.jpg", "price":45},
+    {"text":"lilies", "code":5, "img":"https://i.postimg.cc/LsN9Y3V5/Lilies.jpg", "price":60}
+]

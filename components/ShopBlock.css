@@ -1,0 +1,19 @@
+﻿.ShopBlock {
+  max-width: 650px;
+  padding: 10px;
+  border: double rgb(119, 202, 116) 3px;
+  margin: 20px auto;
+  background-color: #d7f8c9;
+}
+
+.ShopBlock .ShopName {
+  padding: 10px;
+  font-size: 30px;
+  color: rgb(61, 48, 48);
+  text-align: center;
+}
+
+.ShopBlock .Products {
+  padding: 15px;
+}
+
