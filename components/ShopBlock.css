@@ -1,5 +1,5 @@
 ﻿.ShopBlock {
-  max-width: 650px;
+  max-width: 750px;
   padding: 10px;
   border: double rgb(119, 202, 116) 3px;
   margin: 20px auto;
@@ -15,5 +15,31 @@
 
 .ShopBlock .Products {
   padding: 15px;
+}
+
+.ShopBlock .Button {
+  padding: 5px 7px;
+  margin-left: 20px;
+  margin-bottom: 20px;
+  font-size: 20px;
+  color: rgb(63, 55, 55);
+  background-color: rgb(131, 240, 149);
+  width: 150px;
+  border-radius: 10px;
+  border: 2px rgb(110, 198, 124) solid;
+}
+
+.ShopBlock .Button:hover {
+  background-color: rgb(53, 243, 154);
+  border: 2px rgb(110, 198, 136) solid;
+}
+
+.ShopBlock .Button:active {
+  box-shadow: 0px 0px 7px rgb(48, 34, 34) inset;
+}
+
+.ShopBlock .Button:disabled {
+  background-color: rgb(194, 205, 199);
+  color: rgb(110, 100, 100);
 }
 

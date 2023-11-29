@@ -1,0 +1,56 @@
+div.EditCart {
+  padding-left: 15px; 
+}
+
+.EditCart div.Wrapper {
+  display: flex;
+  justify-content:flex-start;
+  margin: 0 0 5px;
+}
+
+.EditCart span.Maintext {
+  font-size: 25px;
+  font-weight: 400;
+  padding: 0 5px 5px;
+}
+
+.EditCart span.Text {
+  width: 130px;
+  font-size: 20px;
+  padding: 0 5px 5px;
+}
+
+.EditCart span.Err {
+  color: #cd1a35;
+  padding-left: 10px;
+  font-size: 20px;
+}
+
+.EditCart input.Input {
+  width: 300px;
+}
+
+.EditCart input.Button {
+  padding: 3px 5px;
+  margin: 10px;
+  font-size: 17px;
+  color: rgb(63, 55, 55);
+  background-color: rgb(131, 240, 149);
+  width: 90px;
+  border-radius: 10px;
+  border: 2px rgb(110, 198, 124) solid;
+}
+  
+.EditCart input.Button:hover {
+  background-color: rgb(245, 226, 177);
+  border: 2px rgb(174, 149, 157) solid;
+}
+  
+.EditCart input.Button:active {
+  box-shadow: 0px 0px 7px rgb(48, 34, 34) inset;
+}
+
+.EditCart input.Button:disabled {
+  background-color: rgb(194, 205, 199);
+  color: rgb(110, 100, 100);
+}

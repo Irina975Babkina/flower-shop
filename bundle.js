@@ -399,7 +399,7 @@ var _ShopBlock = __webpack_require__(15);
 
 var _ShopBlock2 = _interopRequireDefault(_ShopBlock);
 
-var _products = __webpack_require__(19);
+var _products = __webpack_require__(23);
 
 var _products2 = _interopRequireDefault(_products);
 
@@ -30481,6 +30481,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = __webpack_require__(1);
@@ -30493,7 +30495,17 @@ var _ProductBlock = __webpack_require__(17);
 
 var _ProductBlock2 = _interopRequireDefault(_ProductBlock);
 
+var _ProductCart = __webpack_require__(19);
+
+var _ProductCart2 = _interopRequireDefault(_ProductCart);
+
+var _EditCart = __webpack_require__(21);
+
+var _EditCart2 = _interopRequireDefault(_EditCart);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -30517,16 +30529,46 @@ var ShopBlock = function (_React$Component) {
 
     return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = ShopBlock.__proto__ || Object.getPrototypeOf(ShopBlock)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
       selectedProductCode: null,
-      products: _this.props.products
+      products: _this.props.products,
+      mode: 1,
+      i: 6,
+      disablingButtons: false
     }, _this.productSelected = function (code) {
-      console.log("Выбран товар с кодом " + code);
       _this.setState({ selectedProductCode: code });
+      _this.setState({ mode: 2 });
     }, _this.deleteProd = function (code) {
-      console.log("Удаляем товар с кодом " + code);
       var newProductsArr = _this.state.products.filter(function (product) {
         return product.code != code;
       });
       _this.setState({ products: newProductsArr });
+    }, _this.editProd = function (code) {
+      _this.setState({ selectedProductCode: code });
+      _this.setState({ mode: 3 });
+    }, _this.createProduct = function (eo) {
+      _this.setState({ mode: 4 });
+    }, _this.cansel = function () {
+      _this.setState({ mode: 1, disablingButtons: false });
+    }, _this.save = function (prodCode, newValues) {
+      var prodIndex = _this.state.products.findIndex(function (p) {
+        return p.code === prodCode;
+      });
+      if (prodIndex == -1) {
+        console.log("продукта нет");
+        return;
+      }
+      var copyProductsArr = [].concat(_toConsumableArray(_this.state.products));
+      var prod = _this.state.products[prodIndex];
+      var newProd = _extends({}, prod, newValues);
+      copyProductsArr[prodIndex] = newProd;
+      _this.setState({ products: copyProductsArr, mode: 1, disablingButtons: false });
+    }, _this.add = function (newValues) {
+      var copyProdArr = [].concat(_toConsumableArray(_this.state.products));
+      var a = copyProdArr.length;
+      newValues.code = a + 1;
+      var newCopyProdArr = [newValues].concat(_toConsumableArray(copyProdArr));
+      _this.setState({ products: newCopyProdArr, mode: 1, disablingButtons: false });
+    }, _this.workOnProduct = function () {
+      _this.setState({ disablingButtons: true });
     }, _temp), _possibleConstructorReturn(_this, _ret);
   }
 
@@ -30536,10 +30578,17 @@ var ShopBlock = function (_React$Component) {
       var _this2 = this;
 
       var productsCode = this.state.products.map(function (v) {
-        return _react2.default.createElement(_ProductBlock2.default, { key: v.code, text: v.text, img: v.img, code: v.code, price: v.price,
+        return _react2.default.createElement(_ProductBlock2.default, { key: v.code, name: v.name, img: v.img, code: v.code, price: v.price,
           cbSelected: _this2.productSelected,
           cbDelete: _this2.deleteProd,
-          selectedProductCode: _this2.state.selectedProductCode });
+          cbEdit: _this2.editProd,
+          cbWorkOnProduct: _this2.workOnProduct,
+          selectedProductCode: _this2.state.selectedProductCode,
+          disablingButtons: _this2.state.disablingButtons });
+      });
+
+      var selectedProduct = this.state.products.find(function (p) {
+        return p.code === _this2.state.selectedProductCode;
       });
 
       return _react2.default.createElement(
@@ -30554,7 +30603,11 @@ var ShopBlock = function (_React$Component) {
           'div',
           { className: 'Products' },
           productsCode
-        )
+        ),
+        _react2.default.createElement('input', { type: 'button', className: 'Button', value: 'New product', disabled: this.state.disablingButtons, onClick: this.createProduct }),
+        this.state.mode === 2 && _react2.default.createElement(_ProductCart2.default, { product: selectedProduct }),
+        this.state.mode === 3 && _react2.default.createElement(_EditCart2.default, { product: selectedProduct, mode: this.state.mode, key: this.state.selectedProductCode, cbSave: this.save, cbCansel: this.cansel, cbWorkOnProduct: this.workOnProduct }),
+        this.state.mode === 4 && _react2.default.createElement(_EditCart2.default, { product: { "name": "", "img": "", "price": "", "key": 0 }, mode: this.state.mode, cbAdd: this.add, cbWorkOnProduct: this.workOnProduct })
       );
     }
   }]);
@@ -30616,13 +30669,15 @@ var ProductBlock = function (_React$Component) {
     }, _this.productDelete = function (eo) {
       eo.stopPropagation();
       _this.props.cbDelete(_this.props.code);
+    }, _this.productEdit = function (eo) {
+      eo.stopPropagation();
+      _this.props.cbEdit(_this.props.code);
     }, _temp), _possibleConstructorReturn(_this, _ret);
   }
 
   _createClass(ProductBlock, [{
     key: 'render',
     value: function render() {
-
       var isSelected = this.props.selectedProductCode === this.props.code;
 
       return _react2.default.createElement(
@@ -30636,14 +30691,15 @@ var ProductBlock = function (_React$Component) {
         _react2.default.createElement(
           'span',
           { className: 'Text' },
-          this.props.text
+          this.props.name
         ),
         _react2.default.createElement(
           'span',
           { className: 'Price' },
           this.props.price
         ),
-        _react2.default.createElement('input', { type: 'button', className: 'Button', value: 'Delete', onClick: this.productDelete })
+        _react2.default.createElement('input', { type: 'button', className: 'Button', value: 'Delete', disabled: this.props.disablingButtons, onClick: this.productDelete }),
+        _react2.default.createElement('input', { type: 'button', className: 'Button', value: 'Edit', disabled: this.props.disablingButtons, onClick: this.productEdit })
       );
     }
   }]);
@@ -30661,9 +30717,253 @@ exports.default = ProductBlock;
 
 /***/ }),
 /* 19 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(1);
+
+var _react2 = _interopRequireDefault(_react);
+
+__webpack_require__(20);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var ProductCart = function (_React$Component) {
+  _inherits(ProductCart, _React$Component);
+
+  function ProductCart() {
+    _classCallCheck(this, ProductCart);
+
+    return _possibleConstructorReturn(this, (ProductCart.__proto__ || Object.getPrototypeOf(ProductCart)).apply(this, arguments));
+  }
+
+  _createClass(ProductCart, [{
+    key: 'render',
+    value: function render() {
+      return _react2.default.createElement(
+        'div',
+        { className: 'ProductCart' },
+        _react2.default.createElement(
+          'span',
+          { className: 'Maintext' },
+          ' product code ',
+          this.props.product.code,
+          ' selected'
+        ),
+        _react2.default.createElement(
+          'span',
+          { className: 'Text' },
+          'product name: ',
+          this.props.product.text
+        ),
+        _react2.default.createElement(
+          'span',
+          { className: 'Text' },
+          'product price: ',
+          this.props.product.price
+        )
+      );
+    }
+  }]);
+
+  return ProductCart;
+}(_react2.default.Component);
+
+exports.default = ProductCart;
+
+/***/ }),
+/* 20 */
 /***/ (function(module, exports) {
 
-module.exports = [{"text":"red roses","code":1,"img":"https://i.postimg.cc/nVdmbvbH/red-roses.jpg","price":50},{"text":"white roses","code":2,"img":"https://i.postimg.cc/MKCvq5s8/white-roses.jpg","price":55},{"text":"white chrysanthemums","code":3,"img":"https://i.postimg.cc/Tw3PC4Pn/white-chrysanthemums.jpg","price":40},{"text":"yellow chrysanthemums","code":4,"img":"https://i.postimg.cc/MKQpPRz3/yellow-chrysanthemums.jpg","price":45},{"text":"lilies","code":5,"img":"https://i.postimg.cc/LsN9Y3V5/Lilies.jpg","price":60}]
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 21 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(1);
+
+var _react2 = _interopRequireDefault(_react);
+
+__webpack_require__(22);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var EditCart = function (_React$Component) {
+  _inherits(EditCart, _React$Component);
+
+  function EditCart() {
+    var _ref;
+
+    var _temp, _this, _ret;
+
+    _classCallCheck(this, EditCart);
+
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = EditCart.__proto__ || Object.getPrototypeOf(EditCart)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
+      name: _this.props.product.name,
+      img: _this.props.product.img,
+      price: _this.props.product.price,
+      nameErr: "",
+      imgErr: "",
+      priceErr: "",
+      err: false
+    }, _this.nameChanged = function (eo) {
+      _this.setState({ name: eo.target.value }, _this.valid);
+    }, _this.imgChanged = function (eo) {
+      _this.setState({ img: eo.target.value }, _this.valid);
+    }, _this.priceChanged = function (eo) {
+      _this.setState({ price: eo.target.value }, _this.valid);
+    }, _this.productCansel = function () {
+      _this.props.cbCansel();
+    }, _this.productSave = function () {
+      var newProduct = { name: _this.state.name, price: _this.state.price, img: _this.state.img };
+      _this.props.cbSave(_this.props.product.code, newProduct);
+    }, _this.productAdd = function () {
+      var newProduct = { name: _this.state.name, code: _this.props.product.code, img: _this.state.img, price: _this.state.price };
+      _this.props.cbAdd(newProduct);
+    }, _this.valid = function () {
+      var nameErr = "";
+      var priceErr = "";
+      var imgErr = "";
+
+      if (!_this.state.name) {
+        nameErr = "Заполните название!";
+      }
+
+      if (!_this.state.price) {
+        priceErr = "Заполните цену!";
+      }
+
+      if (!_this.state.img) {
+        imgErr = "Добавьте картинку товара!";
+      }
+
+      var err = !!(nameErr || priceErr || imgErr);
+      _this.setState({ nameErr: nameErr, priceErr: priceErr, imgErr: imgErr, err: err });
+
+      _this.props.cbWorkOnProduct();
+    }, _temp), _possibleConstructorReturn(_this, _ret);
+  }
+
+  _createClass(EditCart, [{
+    key: 'render',
+    value: function render() {
+      return _react2.default.createElement(
+        'div',
+        { className: 'EditCart' },
+        this.props.mode === 3 && _react2.default.createElement(
+          'span',
+          { className: 'Maintext' },
+          ' product number ',
+          this.props.product.code,
+          ' selected'
+        ),
+        this.props.mode === 4 && _react2.default.createElement(
+          'span',
+          { className: 'Maintext' },
+          ' New product'
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: 'Wrapper' },
+          _react2.default.createElement(
+            'span',
+            { className: 'Text' },
+            'product name: '
+          ),
+          _react2.default.createElement('input', { className: 'Input', type: 'text', value: this.state.name, onChange: this.nameChanged }),
+          _react2.default.createElement(
+            'span',
+            { className: 'Err' },
+            this.state.nameErr
+          )
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: 'Wrapper' },
+          _react2.default.createElement(
+            'span',
+            { className: 'Text' },
+            'product price: '
+          ),
+          _react2.default.createElement('input', { className: 'Input', type: 'number', value: this.state.price, onChange: this.priceChanged }),
+          _react2.default.createElement(
+            'span',
+            { className: 'Err' },
+            this.state.priceErr
+          )
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: 'Wrapper' },
+          _react2.default.createElement(
+            'span',
+            { className: 'Text' },
+            'product image: '
+          ),
+          _react2.default.createElement('input', { className: 'Input', type: 'text', value: this.state.img, onChange: this.imgChanged }),
+          _react2.default.createElement(
+            'span',
+            { className: 'Err' },
+            this.state.imgErr
+          )
+        ),
+        _react2.default.createElement('input', { type: 'button', className: 'Button', value: 'Cancel', onClick: this.productCansel }),
+        this.props.mode === 3 && _react2.default.createElement('input', { type: 'button', className: 'Button', value: 'Save', disabled: this.state.err, onClick: this.productSave }),
+        this.props.mode === 4 && _react2.default.createElement('input', { type: 'button', className: 'Button', value: 'Add', disabled: this.state.err, onClick: this.productAdd })
+      );
+    }
+  }]);
+
+  return EditCart;
+}(_react2.default.Component);
+
+exports.default = EditCart;
+
+/***/ }),
+/* 22 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 23 */
+/***/ (function(module, exports) {
+
+module.exports = [{"name":"red roses","code":1,"img":"https://i.postimg.cc/nVdmbvbH/red-roses.jpg","price":50},{"name":"white roses","code":2,"img":"https://i.postimg.cc/MKCvq5s8/white-roses.jpg","price":55},{"name":"white chrysanthemums","code":3,"img":"https://i.postimg.cc/Tw3PC4Pn/white-chrysanthemums.jpg","price":40},{"name":"yellow chrysanthemums","code":4,"img":"https://i.postimg.cc/MKQpPRz3/yellow-chrysanthemums.jpg","price":45},{"name":"lilies","code":5,"img":"https://i.postimg.cc/LsN9Y3V5/Lilies.jpg","price":60}]
 
 /***/ })
 /******/ ]);

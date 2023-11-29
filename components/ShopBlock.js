@@ -4,37 +4,96 @@ import './ShopBlock.css';
 
 import ProductBlock from './ProductBlock';
 
+import ProductCart from './ProductCart';
+
+import EditCart from './EditCart';
+
 class ShopBlock extends React.Component {
 
   state= {
     selectedProductCode: null,
     products: this.props.products,
+    mode: 1,
+    i: 6,
+    disablingButtons: false,
   };
 
   productSelected= (code) => {
-    console.log("Выбран товар с кодом " + code);
     this.setState({selectedProductCode: code});
+    this.setState({mode: 2});
   }
 
   deleteProd = (code) => {
-    console.log("Удаляем товар с кодом " + code);
     const newProductsArr = this.state.products.filter(product => product.code!= code);
     this.setState({products: newProductsArr});
+  }
+
+  editProd = (code) => {
+    this.setState({selectedProductCode: code});
+    this.setState({mode: 3});  
+  }
+
+  createProduct = eo => {
+    this.setState({mode: 4}); 
+  }
+
+  cansel = () => {
+    this.setState({mode: 1, disablingButtons: false});
+  }
+
+  save = (prodCode, newValues) => {
+    const prodIndex = this.state.products.findIndex(p => p.code === prodCode);
+    if (prodIndex == -1){
+      console.log("продукта нет")
+      return;
+    }
+    const copyProductsArr = [...this.state.products];
+    const prod = this.state.products[prodIndex];
+    const newProd = {...prod, ...newValues};
+    copyProductsArr[prodIndex] = newProd;
+    this.setState({products: copyProductsArr, mode: 1, disablingButtons: false});
+  }
+
+  add = (newValues) => {
+    const copyProdArr = [...this.state.products];
+    let a = copyProdArr.length;
+    newValues.code = a + 1;
+    let newCopyProdArr = [newValues, ...copyProdArr];
+    this.setState({products: newCopyProdArr, mode: 1, disablingButtons: false});
+  }
+
+  workOnProduct = () => {
+    this.setState({disablingButtons: true});
   }
 
   render() {
 
     const productsCode=this.state.products.map( v =>
-      <ProductBlock key={v.code} text={v.text} img= {v.img} code={v.code} price={v.price}
+      <ProductBlock key={v.code} name={v.name} img= {v.img} code={v.code} price={v.price}
         cbSelected = {this.productSelected} 
         cbDelete = {this.deleteProd}
-        selectedProductCode = {this.state.selectedProductCode}/>
+        cbEdit = {this.editProd}
+        cbWorkOnProduct = {this.workOnProduct}
+        selectedProductCode = {this.state.selectedProductCode}
+        disablingButtons = {this.state.disablingButtons}/>
     );
+
+    let selectedProduct = this.state.products.find(p => p.code === this.state.selectedProductCode);
 
     return (
       <div className='ShopBlock'>
         <div className='ShopName'>{this.props.shopName}</div>
         <div className='Products'>{productsCode}</div>
+        <input type="button" className='Button' value="New product" disabled = {this.state.disablingButtons} onClick={this.createProduct}/>
+        {(this.state.mode === 2) &&
+          <ProductCart product = {selectedProduct}/> 
+        }
+        {(this.state.mode === 3) &&
+          <EditCart product = {selectedProduct} mode = {this.state.mode} key = {this.state.selectedProductCode} cbSave = {this.save} cbCansel = {this.cansel} cbWorkOnProduct = {this.workOnProduct}/> 
+        }
+        {(this.state.mode === 4) &&
+          <EditCart product = {{"name":"", "img":"", "price":"", "key": 0}}  mode = {this.state.mode}  cbAdd = {this.add} cbWorkOnProduct = {this.workOnProduct}/> 
+        }
       </div>
     );
   }
