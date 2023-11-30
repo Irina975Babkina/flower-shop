@@ -56,8 +56,6 @@ class ShopBlock extends React.Component {
 
   add = (newValues) => {
     const copyProdArr = [...this.state.products];
-    /*let a = copyProdArr.length;
-    newValues.code = a + 1;*/
     let a = 0;
     for (let i = 0; i < copyProdArr.length; i+=1) {
       if  (copyProdArr[i].code > a){
