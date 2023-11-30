@@ -30563,8 +30563,15 @@ var ShopBlock = function (_React$Component) {
       _this.setState({ products: copyProductsArr, mode: 1, disablingButtons: false });
     }, _this.add = function (newValues) {
       var copyProdArr = [].concat(_toConsumableArray(_this.state.products));
-      var a = copyProdArr.length;
-      newValues.code = a + 1;
+      /*let a = copyProdArr.length;
+      newValues.code = a + 1;*/
+      var a = 0;
+      for (var i = 0; i < copyProdArr.length; i += 1) {
+        if (copyProdArr[i].code > a) {
+          a = copyProdArr[i].code + 1;
+        }
+      }
+      newValues.code = a;
       var newCopyProdArr = [newValues].concat(_toConsumableArray(copyProdArr));
       _this.setState({ products: newCopyProdArr, mode: 1, disablingButtons: false });
     }, _this.workOnProduct = function () {
