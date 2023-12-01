@@ -30563,16 +30563,18 @@ var ShopBlock = function (_React$Component) {
       _this.setState({ products: copyProductsArr, mode: 1, disablingButtons: false });
     }, _this.add = function (newValues) {
       var copyProdArr = [].concat(_toConsumableArray(_this.state.products));
-      /*let a = copyProdArr.length;
-      newValues.code = a + 1;*/
       var a = 0;
       for (var i = 0; i < copyProdArr.length; i += 1) {
-        if (copyProdArr[i].code > a) {
+        if (copyProdArr[i].code >= a) {
           a = copyProdArr[i].code + 1;
         }
       }
+      console.log(copyProdArr);
       newValues.code = a;
+      console.log(newValues.code);
       var newCopyProdArr = [newValues].concat(_toConsumableArray(copyProdArr));
+
+      console.log(newCopyProdArr);
       _this.setState({ products: newCopyProdArr, mode: 1, disablingButtons: false });
     }, _this.workOnProduct = function () {
       _this.setState({ disablingButtons: true });
@@ -30614,7 +30616,7 @@ var ShopBlock = function (_React$Component) {
         _react2.default.createElement('input', { type: 'button', className: 'Button', value: 'New product', disabled: this.state.disablingButtons, onClick: this.createProduct }),
         this.state.mode === 2 && _react2.default.createElement(_ProductCart2.default, { product: selectedProduct }),
         this.state.mode === 3 && _react2.default.createElement(_EditCart2.default, { product: selectedProduct, mode: this.state.mode, key: this.state.selectedProductCode, cbSave: this.save, cbCansel: this.cansel, cbWorkOnProduct: this.workOnProduct }),
-        this.state.mode === 4 && _react2.default.createElement(_EditCart2.default, { product: { "name": "", "img": "", "price": "", "key": 0 }, mode: this.state.mode, cbAdd: this.add, cbWorkOnProduct: this.workOnProduct })
+        this.state.mode === 4 && _react2.default.createElement(_EditCart2.default, { product: { "name": "", "img": "", "price": "" }, mode: this.state.mode, cbAdd: this.add, cbWorkOnProduct: this.workOnProduct })
       );
     }
   }]);

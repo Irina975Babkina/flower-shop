@@ -58,12 +58,16 @@ class ShopBlock extends React.Component {
     const copyProdArr = [...this.state.products];
     let a = 0;
     for (let i = 0; i < copyProdArr.length; i+=1) {
-      if  (copyProdArr[i].code > a){
+      if  (copyProdArr[i].code >= a){
         a = copyProdArr[i].code + 1;
       }
     }
+    console.log(copyProdArr);
     newValues.code = a;
+    console.log(newValues.code);
     let newCopyProdArr = [newValues, ...copyProdArr];
+
+    console.log(newCopyProdArr);
     this.setState({products: newCopyProdArr, mode: 1, disablingButtons: false});
   }
 
@@ -97,7 +101,7 @@ class ShopBlock extends React.Component {
           <EditCart product = {selectedProduct} mode = {this.state.mode} key = {this.state.selectedProductCode} cbSave = {this.save} cbCansel = {this.cansel} cbWorkOnProduct = {this.workOnProduct}/> 
         }
         {(this.state.mode === 4) &&
-          <EditCart product = {{"name":"", "img":"", "price":"", "key": 0}}  mode = {this.state.mode}  cbAdd = {this.add} cbWorkOnProduct = {this.workOnProduct}/> 
+          <EditCart product = {{"name":"", "img":"", "price":""}}  mode = {this.state.mode}  cbAdd = {this.add} cbWorkOnProduct = {this.workOnProduct}/> 
         }
       </div>
     );
